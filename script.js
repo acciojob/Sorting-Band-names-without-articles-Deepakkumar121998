@@ -1,31 +1,19 @@
-//your code here
+() => {
+  cy.get("li").should("have.length.at.least", 1);
 
-// Array of band names
-let bandNames = ['The Beatles', 'Led Zeppelin', 'Aerosmith', 'The Rolling Stones', 'Pink Floyd'];
+  const tags_content = [];
+  const li_tags_count = document.getElementsByTagName('li').length;
 
-// Function to sort band names without articles
-function sortBandNames(bandNames) {
-  // Regular expression pattern to match articles ('a', 'an', 'the') at the beginning of each band name
-  let articlesPattern = /^(a|an|the)\s/i;
+  // Getting li tags content and checking if they are without any articles and in sorted order
+  for (let index = 0; index < li_tags_count; index++) {
+    cy.get("li").eq(index).then($el => {
+      tags_content.push($el.text());
+    });
+  }
 
-  // Sorting the band names in lexicographic order without articles
-  bandNames.sort((a, b) => {
-    let nameA = a.replace(articlesPattern, '').trim();
-    let nameB = b.replace(articlesPattern, '').trim();
-    return nameA.localeCompare(nameB);
+  tags_content.forEach(tag_content => {
+    const first_word = tag_content.split(" ")[0];
+    const not_article = first_word !== "A" && first_word !== "An" && first_word !== "The";
+    expect(not_article).to.be.equal(true);
   });
-
-  // Returning the sorted band names
-  return bandNames;
 }
-
-// Get the <ul> element with id 'band'
-let ulElement = document.querySelector('#band');
-
-// Sort and display band names
-let sortedBandNames = sortBandNames(bandNames);
-sortedBandNames.forEach(bandName => {
-  let liElement = document.createElement('li');
-  liElement.textContent = bandName;
-  ulElement.appendChild(liElement);
-});
