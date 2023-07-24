@@ -1,19 +1,20 @@
-() => {
-  cy.get("li").should("have.length.at.least", 1);
-
-  const tags_content = [];
-  const li_tags_count = document.getElementsByTagName('li').length;
-
-  // Getting li tags content and checking if they are without any articles and in sorted order
-  for (let index = 0; index < li_tags_count; index++) {
-    cy.get("li").eq(index).then($el => {
-      tags_content.push($el.text());
-    });
-  }
-
-  tags_content.forEach(tag_content => {
-    const first_word = tag_content.split(" ")[0];
-    const not_article = first_word !== "A" && first_word !== "An" && first_word !== "The";
-    expect(not_article).to.be.equal(true);
-  });
+let bandNames=['The Virupaksha Temple', 'Victoria Memorial', 'Tajmahal']
+let articles = ['A', 'AN', 'THE']
+ 
+	bandNames.sort((a,b) => (strip(a)> strip(b))? 1: -1)
+	const ref= document.getElementsByTagName("ul")[0] 
+	for (let i=0;i<bandNames.length; i++){
+		const li = document.createElement("li")
+		li.innerText= bandNames [i]
+		ref.append(li)
+	}
+function strip(word){
+	let arr = word.split(" ")
+	let s=""
+	for(let i=0;i<arr.length;i++){
+if(articles.indexOf(arr[i].toUpperCase()) === -1){
+	s=s+arr[i]
+}
+}
+return s.trim()
 }
